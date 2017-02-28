@@ -1,10 +1,11 @@
 # gaia_challenge
 This is a work in progress
 
-Code works, but needs proper error handling and setup for testing
+Code works, but needs proper error handling and setup for testing.
 
-I setup mocked data, as well as the live connections so that it would
-eliminate the need for unnecessay hits against the supporting web service.
+App has mocked data, or live data connections.  This was done to eliminate 
+the need for unnecessay hits against the supporting web service, and to speed
+development.  Both the live and mocked data utilize the Bluebird Promise library.
 
 #To enable with live data: (any or all of them)
 {Planning these refactor these, as most of the code between the 3 files is identical}
