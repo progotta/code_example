@@ -1,0 +1,6 @@
+{
+    "port" : "3000",
+    "vocabURL" : "http://d6api.gaia.com/vocabulary/1/",
+    "termURL" : "http://d6api.gaia.com/videos/term/",
+    "mediaURL" : "http://d6api.gaia.com/media/"
+}
