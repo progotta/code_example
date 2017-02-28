@@ -10,15 +10,18 @@ development.  Both the live and mocked data utilize the Bluebird Promise library
 #To enable with live data: (any or all of them)
 {Planning these refactor these, as most of the code between the 3 files is identical}
 
-app/vid_utils/getMediabyNid.js (uncomment line 14, and comment line 15 ) 
+app/vid_utils/getMediabyNid.js (uncomment line 14, and comment line 15 )
+
             //return apiRequest(mediaUrl);
             return fs.readFileAsync('./app/api_mock/media.json');
             
-app/vid_utils/getTermsByTid.js  (uncomment line 14, and comment line 15 ) 
+app/vid_utils/getTermsByTid.js  (uncomment line 14, and comment line 15 )
+
             //return apiRequest(termsUrl);
             return fs.readFileAsync('./app/api_mock/term.json');
             
 gaia_challenge/app/vid_utils/getVocabByTid.js (uncomment line 14, and comment line 15 )
+
             //return apiRequest(vocabUrl);
             return fs.readFileAsync('./app/api_mock/vocab.json');
 
