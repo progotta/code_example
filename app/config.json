@@ -1,0 +1,35 @@
+{
+    "extApiEndPoints" : {
+        "getJSONSettings" : {
+            "url" : "", 
+            "method": "GET",
+            "headers": {
+                "Accept": "application/json",
+                "Accept-Charset": "utf-8"
+            }
+        },
+        "endPoints" : {
+            "vocabMeta" : {
+                "requestSettings": "getJSONSettings",
+                "requestType" : "MOCK",
+                "returnType" : "JSON_TO_OBJ",
+                "url" : "http://d6api.gaia.com/vocabulary/1/",
+                "mockDataPath" : "./app/api_mock/vocab.json"
+            },
+            "termsMeta" : {
+                "requestSettings": "getJSONSettings",
+                "requestType" : "MOCK",
+                "returnType" : "JSON_TO_OBJ",
+                "url" : "http://d6api.gaia.com/videos/term/",
+                "mockDataPath" : "./app/api_mock/term.json"
+            },
+            "mediaMeta" : {
+                "requestSettings": "getJSONSettings",
+                "requestType" : "MOCK",
+                "returnType" : "JSON_TO_OBJ",
+                "url" : "http://d6api.gaia.com/media/",
+                "mockDataPath" : "./app/api_mock/media.json"
+            }
+        }
+    }
+}

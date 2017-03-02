@@ -1,22 +1,18 @@
+var logger = require('winston');
 var Promise = require('bluebird');
+var config = require('./config.json');
 var vidUtils = require('./vid_utils');
 
-const apiApp = function(initTid, cb){
-    // Setup THIS context within promise chain
-    const stateObj = {
+const apiApp = function(initTid){
+    logger.info('apiApp called from index.js with id: %s', initTid );
+    
+    // Setup (this) context within promise chain
+    const contextObj = {
         options : {
             initTid : initTid,
             vocabIndex : 0,
             selTitleMethod : "LONGEST_PREVIEW",
-            retTitleMediaType : "PREVIEW",
-            vocabURL : "http://d6api.gaia.com/vocabulary/1/",
-            termsURL : "http://d6api.gaia.com/videos/term/",
-            mediaURL : "http://d6api.gaia.com/media/",
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Accept-Charset': 'utf-8'
-            }
+            retTitleMediaType : "PREVIEW"
         }, 
         results : {
             vocabObj : null,
@@ -32,9 +28,9 @@ const apiApp = function(initTid, cb){
 
 
     //root promise chain
-    Promise
+    return new Promise
         .resolve()
-        .bind(stateObj)
+        .bind(contextObj)
         .then(vidUtils.getVocabByTid)           // gets a vocab obj
         .then(vidUtils.getVocabTidByIndex)      // accepts a vocab obj and returns an id based on stateObj(this).options.vocabIndex
         .then(vidUtils.getTermsByTid)           // accepts a Tid and returns a terms obj
@@ -42,11 +38,11 @@ const apiApp = function(initTid, cb){
         .then(vidUtils.getTitleFromTitles)      // accepts a titles obj and returns the title object of the one with the longest preview
         .then(vidUtils.getMediaNidFromTitle)    // accepts a title obj and returns a mediaNid based on stateObj(this).options.retTitleMediaType
         .then(vidUtils.getMediaByNid)           // accepts Nid and returns a media obj
-        .then(vidUtils.buildResponseObj)
-        .then(cb)
-        .catch(Error, (error) => {
-            console.error(error);
-        });
+        .then(vidUtils.buildResponseObj);
+//        .then(cb)
+//        .catch(Error, (error) => {
+//            console.error(error);
+//        });
 
 }
 
