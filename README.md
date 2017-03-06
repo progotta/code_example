@@ -3,31 +3,32 @@
 Example Node project demonstrating how to create a modualar and testable
 API Endpoint with sufficient error handling and logging.
 
-: node, express, bluebird, mocha/chai, winston
+: node, express, bluebird, mocha/chai, generators
 
 Promises are used to make 3 asynchronous calls to external API Endpoints 
 in a synchronous fashion. Data is processed at each step to
 derive the necessary input for the next call, and the final result.
 
-Current Status : In Progress - Application performs the described operations,
-but needs refactoring, additional tests, more robust error handling / logging. 
+Asynchronous Control Flow is handled primarily by generators.
 
-## Getting Started
+Current Status : Ready For Review - Application has basic error 
+handling with Try/Catch on sync calls and .catch() on async 
+through promises.  Application has a number of test cases, though
+just an example and does not provide full coverage. 
 
-(more info to come here)
+## Mocked and Live Data Settings
 
 App has mocked data, or live data connections.  This was done to eliminate 
 the need for unnecessay hits against the supporting web service, and to speed
 development.  Both the live and mocked data utilize the Bluebird Promise library.
 
 To enable with live data: (any or all of them)
-
 ...
-app/config.json 
+/config.json 
             "requestType" : "MOCK" (Can be "MOCK" or "REAL")
 ...
 
-### More to come!
+ 
 
 <!--
 ### Prerequisites
