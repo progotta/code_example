@@ -1,7 +1,6 @@
 # gaia_challenge
 
-Example Node project demonstrating how to create a modualar and testable
-API Endpoint with sufficient error handling and logging.
+Example Node/Express API Endpoint(GET) utilizing promises and generators. 
 
 : node, express, bluebird, mocha/chai, generators
 
