@@ -22,6 +22,18 @@ it('should return Obj from promise chain', function() {
 });
 
 /*
+it('should do something with some async code', function(done){
+   readPost(__dirname + '/../fixtures/test-post.txt')
+       .then(function(data){
+           data.should.equal('some content inside the post');
+           done();
+       })
+       .catch(done);
+});
+*/
+
+
+/*
 describe('apiApp', function() {
   it('should add class to element');
   it('should not add a class which already exists');

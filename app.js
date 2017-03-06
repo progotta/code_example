@@ -1,11 +1,18 @@
+'use strict';
 var express = require('express');
 var Promise = require('bluebird');
-var config = require('./config.json');
+var config = require('./config');
 //var logger = require('./app/common/log'); // retuns logger and inits app logger configuation
 var apiApp = require('./app/index');
 
+function wrap (genFn) { // 1  - Generator Wrapper From Express 
+    var cr = Promise.coroutine(genFn) // 
+    return function (req, res, next) { // 3
+        cr(req, res, next).catch(next) // 4
+    }
+}
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test') {  // this does not seem to work???
     var logger = require('./app/common/log'); // retuns logger and inits app logger configuation
 } else {
     var logger = require('winston');
@@ -14,30 +21,22 @@ if (process.env.NODE_ENV !== 'test') {
 
 var app = express();
 
-// For Security
+// Simple Security - for bots discovering based on x-powered-by
 app.disable('x-powered-by'); 
 
-app.get('/v1/api/term/:tid/longest-preview-media-url', function(req, res) {
-    logger.log('debug', 'app.js longest-preview-media-url params', req.params );
-     
-    var apiResponse = function() {
-        return new Promise
-            .resolve()
-            .then(function() {
-                return apiApp(req.params.tid); //26681
-            })
-            .then(function(response) {
-                logger.info('app.js longest-preview-media-url response', response );
-                res.json(response);
-            })
-            .catch(Error, (error) => {
-                logger.error('app.js longest-preview-media-url error', error );
-                res.status(500).json({ error: "500: Internal Server Error" });
-            });
-    }();
+// Using a Generator here to guarantee fufilled promise - Check Express Documentation 
+app.get('/v1/api/term/:tid/longest-preview-media-url', wrap(function *(req, res) {
+  var data = yield apiApp(req.params.tid);
+//  console.log(data);
+  res.json(data);
+}));
 
-//    apiApp(req.params.tid, res.json.bind(res)); //26681
-
+app.use(function (err, req, res, next) {
+    if (err) {
+        console.log(err);
+//        logger.error('Application Error: ', err );
+        res.status(500).json({ error: "500: Internal Server Error" });
+    }
 });
 
 // Default 404
@@ -46,7 +45,8 @@ app.use(function (req, res, next) {
     res.status(404).json({ error: "404: Not Found" });
 })
 
-var port = process.env.PORT || config.port;
+
+var port = process.env.PORT || config.server.port;
 
 // start server
 app.listen(port);

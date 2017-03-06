@@ -1,125 +1,100 @@
+'use strict';
 var logger = require('winston');
 var Promise = require('bluebird');
 var apiRequest = require('../common/apiRequest');
-var config = require('../config');
+var config = require('../../config');
 
-exports.getTitleFromTitles = require('./getTitleFromTitles');
-exports.getMediaNidFromTitle = require('./getMediaNidFromTitle');
+module.exports.getTitleFromTitles = require('./getTitleFromTitles');
+module.exports.getMediaNidFromTitle = require('./getMediaNidFromTitle');
 
 
 function buildconfig(id, endpoint) {
-    var apiReqConf = {};
-
-    // build a configuration object
-    var endPointConfig = config.extApiEndPoints.endPoints[endpoint];
-    var extApiConfig = config.extApiEndPoints[endPointConfig.requestSettings];
-    extApiConfig.url = endPointConfig.url + id;
-    apiReqConf.reqOptions = extApiConfig;
-    apiReqConf.reqConfig = endPointConfig;
-
-    return apiReqConf;
-}
-
-exports.getVocabByTid = function(tid) {
+    try {
+        var apiReqConf = {};
+        // build a configuration object
+        var endPointConfig = config.extApiEndPoints.endPoints[endpoint];
+        var extApiConfig = config.extApiEndPoints[endPointConfig.requestSettings];
+        extApiConfig.uri = endPointConfig.uri + id;
+        apiReqConf.reqOptions = extApiConfig;
+        apiReqConf.reqConfig = endPointConfig; // add a g
+        return apiReqConf;
+    } catch (error) {
+        // pass the error on
+        throw error;
+    }
     
-    var tid = tid || this.options.initTid; // need to not get from options somehow
+}
+
+module.exports.getVocabByTid = function(tid) {
+
+ //   var tid = tid || 26681; // need to not get from options somehow
     var apiReqConf = buildconfig(tid,'vocabMeta');
-    logger.info('vid_utils/index.js:getVocabByTid apiReqConf:', apiReqConf );
-
-    return Promise
-        .resolve()
-        .bind(this)
-        .then(function() {
-            return apiRequest(apiReqConf);
-        })
-        .then(function(result) {
-            this.results.vocabObj = result;
-            return result;
-        });
-
-/*
-    return new Promise((resolve, reject) => {
-        var result = apiRequest(apiReqConf);
-        this.results.vocabObj = result
-        resolve(result)
-//        return this.results.vocabObj = result; 
-
- //       someModule(param, (result, error) => {
- //           if (error) { reject(error); }
- //           else { resolve(result); }
- //       });
-    });
-*/
-
+    var vocabObj = apiRequest(apiReqConf).then(function(result) {
+                    return result;
+                }).catch(Error, (error) => {
+                    // pass the error on
+                    throw error;
+                });
+    return vocabObj;
 }
 
-exports.getTermsByTid = function(tid) {
-
+module.exports.getTermsByTid = function(tid) {
     var apiReqConf = buildconfig(tid,'termsMeta');
-    logger.info('vid_utils/index.js:getTermsByTid apiReqConf:', apiReqConf );
-
-    return Promise
-        .resolve()
-        .bind(this)
-        .then(function() {
-            return apiRequest(apiReqConf);
-        })
-        .then(function(result) {
-            this.results.termsObj = result;
-            return result;
-        });
+    var termsObj = apiRequest(apiReqConf).then(function(result) {
+                    return result;
+                }).catch(Error, (error) => {
+                    // pass the error on
+                    throw error;
+                });
+    return termsObj;
 
 }
 
-exports.getMediaByNid = function(nid) {
-
+module.exports.getMediaByNid = function(nid) {
     var apiReqConf = buildconfig(nid,'mediaMeta');
-    logger.info('vid_utils/index.js:getMediaByNid apiReqConf:', apiReqConf );
-
-    return Promise
-        .resolve()
-        .bind(this)
-        .then(function() {
-            return apiRequest(apiReqConf);
-        })
-        .then(function(result) {
-            this.results.mediaObj = result;
-            return result;
-        });
-
-/*
-    return new Promise((resolve, reject) => {
-        var result = apiRequest(apiReqConf);
-        this.results.mediaObj = result
-        resolve(result)
-    });
-*/
+    var mediaObj = apiRequest(apiReqConf).then(function(result) {
+                    return result;
+                }).catch(Error, (error) => {
+                    // pass the error on
+                    throw error;
+                });
+    return mediaObj;
 }
 
-exports.getVocabTidByIndex = function(vocab) {
-    // index is passed in from state obj
-    const vocabIndex = this.options.vocabIndex || 0;
+module.exports.getVocabTidByIndex = function(vocab, indexId) {
+    try{
+        const vocabIndex = indexId;
+        return vocab.terms[vocabIndex].tid;
+    } catch (error) {
+        // pass the error on
+        throw error;
+    }
 
-    // need to do sufficient checking for obj and property
-    return vocab.terms[vocabIndex].tid;
 }
 
-exports.getTitlesFromTerms = function(terms) {
+module.exports.getTitlesFromTerms = function(terms) {
     // need logic to test this
-    const titles = terms.titles;
-    return titles;
+    try{
+        const titles = terms.titles;
+        return titles;
+    } catch (error) {
+        // pass the error on
+        throw error;
+    }
 }
 
-exports.buildResponseObj = function() {
-    //assumes fully built state object 
-    logger.info('vid_utils/index.js:buildResponseObj: ', this.results.vocabObj );
-
-    var returnObj = {};
-    returnObj.bcHLS = this.results.mediaObj.mediaUrls.bcHLS;
-    returnObj.titleNid = this.results.selTitleObj.nid;
-    returnObj.previewNid = this.results.selTitleObj.preview.nid;
-    returnObj.previewDuration = this.results.selTitleObj.preview.duration;
-
-    return returnObj;
+module.exports.buildResponseObj = function(dataObj) {
+    try{
+        var returnObj = {};
+        returnObj.bcHLS = dataObj.mediaObj.mediaUrls.bcHLS;
+        returnObj.titleNid = dataObj.titleObj.nid;
+        returnObj.previewNid = dataObj.titleObj.preview.nid;
+        returnObj.previewDuration = dataObj.titleObj.preview.duration;
+        
+        return returnObj;
+    } catch (error) {
+        // pass the error on
+        throw error;
+    }
 
 }
