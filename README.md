@@ -31,7 +31,7 @@ I didn't know what version of node it was supposed to be done in, and how much
 ES6 support would be desired, so this has a bit of a mixture.  The requirements
 do not specify tests, but I included some example Mocha/Chai Unit and Integration Tests.
 Also, there is no Authentication/Authorization - though I would handle that through
-another service and middleware to check it.  JWT preferred...
+another service and/or middleware to check it.
 
 Example Node/Express API Endpoint(GET) utilizing promises and generators. 
 
